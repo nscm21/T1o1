@@ -121,13 +121,11 @@ print("%d rules generated in %f seconds" % (N, time() - time_start))
 
 
 def rule_is_valid(rule, fact):
-    new_rule = []
+    new_rule = [rule[0]]
     flag = True
     for i in rule:
         flag = True
         for j in new_rule:
-            if len(new_rule) == 0:
-                break
             if j['if'] == i['if']:
                 flag = False
                 break
@@ -149,18 +147,21 @@ def rule_is_valid(rule, fact):
                     break
         if flag:
             new_rule.append(i)
+            
     print(f'rules before {len(rule)}')
-    rule = new_rule
-    print(f'rules after {len(rule)}')
+    print(f'rules after {len(new_rule)}')
+    return new_rule
 
+
+#rule=rule_is_valid(rules, facts)
 
 # check facts vs rules
 
 time_start = time()
-print(facts)
+#print(facts)
 # YOUR CODE HERE
 facts = list(set(facts))
-print(facts)
+#print(facts)
 
 
 def rule_check(rule, fact):
@@ -178,8 +179,6 @@ def rule_check(rule, fact):
     return ans
 
 
-rule_is_valid(rules, facts)
-
-print(rule_check(rules, facts))
+print(len(rule_check(rules, facts)))
 
 print("%d facts validated vs %d rules in %f seconds" % (M, N, time() - time_start))
