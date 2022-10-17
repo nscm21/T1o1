@@ -120,7 +120,7 @@ print("%d rules generated in %f seconds" % (N, time() - time_start))
 # YOUR CODE HERE
 
 
-def rule_is_valid(rule, fact):
+def rule_is_valid(rule,facts):
     new_rule = [rule[0]]
     flag = True
     for i in rule:
@@ -145,6 +145,8 @@ def rule_is_valid(rule, fact):
                 if j['if']['not'] == i['if']['and']:
                     flag = False
                     break
+        if i['then'] in facts:
+            flag=False
         if flag:
             new_rule.append(i)
             
@@ -169,16 +171,16 @@ def rule_check(rule, fact):
     for i in rule:
         if 'not' in i['if']:
             if (set(i['if']['not']) & set(fact)) is None:
-                ans.append(i)
+                ans.append(i['then'])
         elif 'or' in i['if']:
             if (set(i['if']['or']) & set(fact)) is not None:
-                ans.append(i)
+                ans.append(i['then'])
         elif 'and' in i['if']:
             if (set(i['if']['and']) & set(fact)) == set(i['if']['and']):
-                ans.append(i)
+                ans.append(i['then'])
     return ans
 
 
-print(len(rule_check(rules, facts)))
+print((rule_check(rules, facts)))
 
 print("%d facts validated vs %d rules in %f seconds" % (M, N, time() - time_start))
