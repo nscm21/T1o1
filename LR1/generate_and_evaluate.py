@@ -154,8 +154,9 @@ def rule_is_valid(rule, facts):
     return new_rule
 
 
+time_start = time()
 rule = rule_is_valid(rules, facts)
-
+print(" validate tes %f seconds" % (time() - time_start))
 # check facts vs rules
 
 time_start = time()
@@ -182,6 +183,6 @@ def rule_check(rule, fact):
     return ans
 
 
-print((rule_check(rules, facts)))
+print(len(rule_check(rules, facts)))
 
 print("%d facts validated vs %d rules in %f seconds" % (M, N, time() - time_start))
