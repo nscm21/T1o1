@@ -47,8 +47,38 @@ def linear_regression_numpy(filename):
 
 
 def linear_regression_exact(filename):
-    print("Ex1: your code here - exact solution usin invert matrix")
-    return
+    # now let's read it back
+    with open(filename, 'r') as f:
+        data = np.loadtxt(f, delimiter=',')
+    # split to initial arrays
+    x, y = np.hsplit(data, 2)
+    # printing shapes is useful for debugging
+    print(np.shape(x))
+    print(np.shape(y))
+    # our model
+    print(np.shape(x))
+    column_with_ones=np.ones(np.shape(x))
+    #delta=np.vstack(column_with_ones)
+    print(column_with_ones)
+    x=np.append(x,column_with_ones,axis=1)
+    x=np.transpose(x)
+    print()
+    # time_start = time()
+    # model = np.polyfit(np.transpose(x)[0], np.transpose(y)[0], 1)
+    # time_end = time()
+    # print(f"polyfit in {time_end - time_start} seconds")
+    # # our hypothesis for give x
+    # h = model[0] * x + model[1]
+    #
+    # # and check if it's ok
+    # plt.title("Linear regression task")
+    # plt.xlabel("X")
+    # plt.ylabel("Y")
+    # plt.plot(x, y, "b.", label='experiment')
+    # plt.plot(x, h, "r", label='model')
+    # plt.legend()
+    # plt.show()
+    # return (model)
 
 
 def check(model, ground_truth):
@@ -174,7 +204,7 @@ if __name__ == "__main__":
     model = linear_regression_numpy("linear.csv")
     print(f"Is model correct?\n{check(model, np.array([1, -3]))}")
     # ex1 . - exact solution
-    # model_exact = linear_regression_exact("linear.csv")
+    model_exact = linear_regression_exact("linear.csv")
     # check(model_exact, np.array([-3,1]))
 
     # ex1. polynomial with numpy
