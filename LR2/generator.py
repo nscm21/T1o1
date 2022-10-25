@@ -57,28 +57,33 @@ def linear_regression_exact(filename):
     print(np.shape(y))
     # our model
     print(np.shape(x))
-    column_with_ones=np.ones(np.shape(x))
-    #delta=np.vstack(column_with_ones)
-    print(column_with_ones)
-    x=np.append(x,column_with_ones,axis=1)
-    x=np.transpose(x)
-    print()
-    # time_start = time()
-    # model = np.polyfit(np.transpose(x)[0], np.transpose(y)[0], 1)
-    # time_end = time()
-    # print(f"polyfit in {time_end - time_start} seconds")
-    # # our hypothesis for give x
-    # h = model[0] * x + model[1]
-    #
-    # # and check if it's ok
-    # plt.title("Linear regression task")
-    # plt.xlabel("X")
-    # plt.ylabel("Y")
-    # plt.plot(x, y, "b.", label='experiment')
-    # plt.plot(x, h, "r", label='model')
-    # plt.legend()
-    # plt.show()
-    # return (model)
+    column_with_ones = np.ones(np.shape(x))
+    # delta=np.vstack(column_with_ones)
+    x_ex = np.append(column_with_ones, x, axis=1)
+
+    x_transposed = x_ex
+    x_ex = np.transpose(x_ex)
+    # print(x)
+    x_dotted=np.dot(x_transposed,x_ex)
+    x_pinved=np.linalg.pinv(x_dotted)
+    x_dotted=np.dot(x_pinved,x_transposed)
+    model=np.dot(np.transpose(x_dotted),y)
+
+    time_start = time()
+    time_end = time()
+    print(f"polyfit in {time_end - time_start} seconds")
+    # our hypothesis for give x
+    h = model[1] * x + model[0]
+
+    # and check if it's ok
+    plt.title("Linear regression task")
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.plot(x, y, "b.", label='experiment')
+    plt.plot(x, h, "r", label='model')
+    plt.legend()
+    plt.show()
+    return (model)
 
 
 def check(model, ground_truth):
@@ -132,7 +137,6 @@ def polynomial_regression_numpy(filename):
     print(f"polynomal in {time_end - time_start} seconds")
 
     # our hypothesis for give x
-
 
     # and check if it's ok
     plt.title("Linear regression task")
