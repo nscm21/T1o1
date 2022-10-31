@@ -64,10 +64,10 @@ def linear_regression_exact(filename):
     x_transposed = x_ex
     x_ex = np.transpose(x_ex)
     # print(x)
-    x_dotted=np.dot(x_transposed,x_ex)
-    x_pinved=np.linalg.pinv(x_dotted)
-    x_dotted=np.dot(x_pinved,x_transposed)
-    model=np.dot(np.transpose(x_dotted),y)
+    x_dotted = np.dot(x_transposed, x_ex)
+    x_pinved = np.linalg.pinv(x_dotted)
+    x_dotted = np.dot(x_pinved, x_transposed)
+    model = np.dot(np.transpose(x_dotted), y)
 
     time_start = time()
     time_end = time()
@@ -135,6 +135,7 @@ def polynomial_regression_numpy(filename):
     model = np.polyfit(np.transpose(x)[0], np.transpose(y)[0], 2)
     time_end = time()
     print(f"polynomal in {time_end - time_start} seconds")
+    print(x.shape)
 
     # our hypothesis for give x
 
@@ -160,17 +161,17 @@ def polynomial_regression_numpy(filename):
 # dJ(theta) - gradient, i.e. partial derivatives of J over theta - dJ/dtheta_i (shape is 1 x N - the same as theta)
 # x and y are both vectors
 
-def gradient_descent_step(dJ, theta, alpha):
-    print("your code goes here")
-
+def gradient_descent_step(x, y, theta, alpha):
+    dJ = get_dJ(x, y, theta)
+    theta = theta - alpha * dJ
     return (theta)
 
 
 # get gradient over all xy dataset - gradient descent
 def get_dJ(x, y, theta):
-    theta_new = theta
-    print("your code goes here - calculate new theta")
-    return theta_new
+    h = theta.dot(x.transpose())
+    dj = 1 / len(x) * (h - y.transpose()).dot(x)
+    return dj
 
 
 # get gradient over all minibatch of size M of xy dataset - minibatch gradient descent
@@ -187,20 +188,55 @@ def get_dJ_sgd(x, y, theta):
     return theta_new
 
 
+def loss_func(x, y, theta):
+    h = theta.dot(x)
+    j = 0.5 / len(x) * np.square(h - y.transpose()).sum(axis=1)
+    J = 0
+
+
 # try each of gradient decsent (complete, minibatch, sgd) for varius alphas
 # L - number of iterations
 # plot results as J(i)
-def minimize(theta, x, y, L):
+def minimize(x, y, L, count):
     # n - number of samples in learning subset, m - ...
-    n = 12345  # <-- calculate it properly!
-    theta = np.zeros(n)  # you can try random initialization
-    dJ = np.zeros(n)
+    # n = 12345  # <-- calculate it properly!
+    # you can try random initialization
+    theta = np.vstack(np.random.sample(count))
+    J = []
+    iterations = []
+    # dJ = np.zeros(n)
+    alpha = 0.1
+
     for i in range(0, L):
-        theta = get_dJ(x, y, theta)  # here you should try different gradient descents
-        J = 0  # here you should calculate it properly
+        theta = gradient_descent_step(x, y, theta, alpha)  # here you should try different gradient descents
+        J.append(loss_func(x, y, theta))  # here you should calculate it properly
+        iterations.append(i)
+        alpha -= 0.0002
     # and plot J(i)
-    print("your code goes here")
-    return
+
+    plt.title("Gradient descent task")
+    plt.xlabel("Iteration")
+    plt.ylabel("Loss function")
+    plt.plot(iterations, J, "b.", label='Loss function')
+    plt.legend()
+    plt.show()
+
+    return theta
+
+
+def linear_regression_my_descent(L, count, filename):
+    with open(filename, 'r') as f:
+        data = np.loadtxt(f, delimiter=',')
+    # split to initial arrays
+    x, y = np.hsplit(data, 2)
+    # printing shapes is useful for debugging
+    print(np.shape(x))
+    print(np.shape(y))
+    # our model
+    print(np.shape(x))
+    column_with_ones = np.ones(np.shape(x))
+
+    model = minimize(x, y, L, count)
 
 
 if __name__ == "__main__":
@@ -214,6 +250,8 @@ if __name__ == "__main__":
     # ex1. polynomial with numpy
     generate_poly([1, 2, 3], 2, 0.5, 'polynomial.csv')
     polynomial_regression_numpy("polynomial.csv")
+
+    linear_regression_my_descent(1000, 2, 'linear.csv')
 
     # ex2. find minimum with gradient descent
     # 0. generate date with function above
